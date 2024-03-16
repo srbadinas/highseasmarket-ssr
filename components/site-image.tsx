@@ -5,14 +5,14 @@ import { HTMLProps, useState } from "react";
 
 interface SiteImageProps extends HTMLProps<HTMLImageElement> { }
 
-export const SiteImage = ({ src = "", className, alt = "" }: SiteImageProps) => {
-    const [valid, setValid] = useState<boolean>(true);
+export const SiteImage = ({ }: SiteImageProps) => {
+    // const [valid, setValid] = useState<boolean>(true);
 
-    const handleError = () => {
-        setValid(false);
-    }
+    // const handleError = () => {
+    //     setValid(false);
+    // }
 
-    return valid ? <img src={src} className={`${className}`} alt={alt} onError={handleError} /> : <ImageNotFound />
+    return <ImageNotFound />
 }
 
 const ImageNotFound = () => (

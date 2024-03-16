@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { MenuIcon, SearchIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { ChangeEvent, FormEvent, MouseEvent as ClickEvent, useEffect, useRef, useState, forwardRef } from "react";
+import React from "react";
 
 export const Header = () => {
     const [expand, setExpand] = useState<boolean>(false)
@@ -14,18 +15,18 @@ export const Header = () => {
     const menuRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
+        const handleOutsideClick = (event: MouseEvent) => {
+            if (expand && buttonRef.current && !buttonRef.current.contains(event.target as Node) && menuRef.current && !menuRef.current.contains(event.target as Node)) {
+                setExpand(prev => !prev);
+            }
+        }
+
         document.addEventListener('mousedown', handleOutsideClick);
 
         return () => {
             document.removeEventListener('mousedown', handleOutsideClick);
         }
     }, [expand])
-
-    const handleOutsideClick = (event: MouseEvent) => {
-        if (expand && buttonRef.current && !buttonRef.current.contains(event.target as Node) && menuRef.current && !menuRef.current.contains(event.target as Node)) {
-            setExpand(prev => !prev);
-        }
-    }
 
     const handleMenuClick = (event: ClickEvent) => {
         setExpand(prev => !prev);
@@ -40,7 +41,7 @@ export const Header = () => {
                         <Link href="/login">
                             <Button type="button" className="w-[150px] rounded-full">Login</Button>
                         </Link>
-                        <p className="text-xs">Don't have an account? <Link href="/register" className="text-primary">Apply</Link></p>
+                        <p className="text-xs">Don&apos;t have an account? <Link href="/register" className="text-primary">Apply</Link></p>
                     </div>
                 </Container>
             </div>
@@ -61,11 +62,11 @@ export const Header = () => {
     )
 }
 
-const Menu = forwardRef<HTMLDivElement>((props, ref) => {
+const Menu = forwardRef<HTMLDivElement>((_, ref) => {
     return <div ref={ref} className="absolute w-full h-[64px] left-0 top-[70px] bg-gradient-to-b from-secondary to-primary rounded-b flex items-center">
         <ul className="w-full">
-            <MenuItem  href="/" label="Home"/>
-            <MenuItem  href="/listings" label="Listings"/>
+            <MenuItem href="/" label="Home" />
+            <MenuItem href="/listings" label="Listings" />
         </ul>
     </div>
 })
@@ -76,6 +77,8 @@ interface MenuItemProps {
 }
 
 const MenuItem = ({ href, label }: MenuItemProps) => (<li className="px-2"><Link href={href} className="block text-white transition px-2 hover:bg-blue-600">{label}</Link></li>)
+
+Menu.displayName = 'Menu';
 
 const SearchInput = () => {
     const [inputValue, setInputValue] = useState<string>('');
